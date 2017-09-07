@@ -17,7 +17,7 @@ type MiddlewareJWTToken struct {
 }
 
 func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *ethereal.Application) {
-	confToken := config("AUTH.JWT_TOKEN").(string)
+	confToken := ethereal.GetCnf("AUTH.JWT_TOKEN").(string)
 
 	if confToken == "local" {
 		m.included = true
@@ -29,7 +29,7 @@ func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *etherea
 				} else {
 					m.authenticated = true
 				}
-				ctxStruct(application, m)
+				ethereal.CtxStruct(application, m)
 				handler.ServeHTTP(w, r)
 			})
 		})
