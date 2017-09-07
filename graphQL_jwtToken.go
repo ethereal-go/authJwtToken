@@ -6,6 +6,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"errors"
 	"github.com/agoalofalife/ethereal"
+	"net/http"
 )
 
 // set locale database
@@ -77,3 +78,30 @@ var authMutation = graphql.NewObject(graphql.ObjectConfig{
 		"createJWTToken": &CreateJWTToken,
 	},
 })
+
+func RegisterHandlerAuthCreateToken()  {
+	if ethereal.GetCnf("AUTH.JWT_TOKEN").(string) == "globals" {
+		http.HandleFunc("auth0/login", func(w http.ResponseWriter, r *http.Request) {
+			var user ethereal.User
+
+			login := r.FormValue("login")
+			password := r.FormValue("password")
+
+			ethereal.App.Db.Where("email = ?", login).First(&user)
+
+			if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
+				claims := EtherealClaims{
+					jwt.StandardClaims{
+						ExpiresAt: 1,
+						Issuer:    user.Email,
+					},
+				}
+				// TODO add choose crypt via configuration!
+				token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+				generateToken, _ := token.SignedString(JWTKEY())
+				w.Write([]byte(generateToken))
+			}
+		})
+	}
+}
