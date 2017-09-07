@@ -45,3 +45,10 @@ func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *etherea
 		})
 	}
 }
+
+func GetMiddlewareJwtToken() MiddlewareJWTToken {
+	return MiddlewareJWTToken{
+		ResponseError: http.StatusText(http.StatusNetworkAuthenticationRequired),
+		StatusError:   http.StatusNetworkAuthenticationRequired,
+	}
+}
