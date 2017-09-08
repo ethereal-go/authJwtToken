@@ -3,7 +3,7 @@ package authJwtToken
 import (
 	"net/http"
 	"github.com/justinas/alice"
-	"github.com/agoalofalife/ethereal"
+	"github.com/ethereal-go/ethereal"
 	"encoding/json"
 )
 

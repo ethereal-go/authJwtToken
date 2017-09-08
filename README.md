@@ -6,7 +6,7 @@
  ```
  
 import (
-	"github.com/agoalofalife/ethereal"
+	"github.com/ethereal-go/ethereal"
 	"github.com/ethereal-go/authJwtToken"
 )
 

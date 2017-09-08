@@ -5,7 +5,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"net/http"
 	"strings"
-	"github.com/agoalofalife/ethereal"
+	"github.com/ethereal-go/ethereal"
 )
 
 type EtherealClaims struct {
