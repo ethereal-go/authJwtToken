@@ -19,7 +19,7 @@ var jwtType = graphql.NewObject(graphql.ObjectConfig{
 	Fields: graphql.Fields{
 		"token": &graphql.Field{
 			Type:        graphql.String,
-			Description: "",
+			Description: string(ethereal.ConstructorI18N().T(ethereal.GetCnf("L18N.LOCALE").(string), "graphQL.JwtType.Token.Description")),
 		},
 	},
 })
@@ -29,7 +29,7 @@ var jwtType = graphql.NewObject(graphql.ObjectConfig{
 */
 var CreateJWTToken = graphql.Field{
 	Type:        jwtType,
-	Description: "Create new jwt-token",
+	Description: string(ethereal.ConstructorI18N().T(ethereal.GetCnf("L18N.LOCALE").(string), "graphQL.JwtType.CreateJWTToken.Description")),
 	Args: graphql.FieldConfigArgument{
 		"login": &graphql.ArgumentConfig{
 			Type: graphql.NewNonNull(graphql.String),
