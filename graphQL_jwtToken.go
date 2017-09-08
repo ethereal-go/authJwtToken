@@ -1,11 +1,11 @@
 package authJwtToken
 
 import (
+	"errors"
+	"github.com/agoalofalife/ethereal"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
-	"errors"
-	"github.com/agoalofalife/ethereal"
 	"net/http"
 )
 
@@ -13,13 +13,16 @@ import (
 const (
 	errorInputData = "Login or Password not valid"
 )
+// get type locale from configuration..
+var locale = ethereal.GetCnf("L18N.LOCALE").(string)
 
 var jwtType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "JWTToken",
+	Name:        "JWTToken",
+	Description: string(ethereal.ConstructorI18N().T(locale, "graphQL.JwtType.Description")),
 	Fields: graphql.Fields{
 		"token": &graphql.Field{
 			Type:        graphql.String,
-			Description: string(ethereal.ConstructorI18N().T(ethereal.GetCnf("L18N.LOCALE").(string), "graphQL.JwtType.Token.Description")),
+			Description: string(ethereal.ConstructorI18N().T(locale, "graphQL.JwtType.Token.Description")),
 		},
 	},
 })
@@ -29,7 +32,7 @@ var jwtType = graphql.NewObject(graphql.ObjectConfig{
 */
 var CreateJWTToken = graphql.Field{
 	Type:        jwtType,
-	Description: string(ethereal.ConstructorI18N().T(ethereal.GetCnf("L18N.LOCALE").(string), "graphQL.JwtType.CreateJWTToken.Description")),
+	Description: string(ethereal.ConstructorI18N().T(locale, "graphQL.JwtType.CreateJWTToken.Description")),
 	Args: graphql.FieldConfigArgument{
 		"login": &graphql.ArgumentConfig{
 			Type: graphql.NewNonNull(graphql.String),
@@ -39,32 +42,32 @@ var CreateJWTToken = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			var user ethereal.User
-			var generateToken string
-			login, _ := params.Args["login"].(string)
-			password, _ := params.Args["password"].(string)
+		var user ethereal.User
+		var generateToken string
+		login, _ := params.Args["login"].(string)
+		password, _ := params.Args["password"].(string)
 
-		   ethereal.App.Db.Where("email = ?", login).First(&user)
+		ethereal.App.Db.Where("email = ?", login).First(&user)
 
-			if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
-				claims := EtherealClaims{
-					jwt.StandardClaims{
-						ExpiresAt: 1,
-						Issuer:    user.Email,
-					},
-				}
-				// TODO add choose crypt via configuration!
-				token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-				generateToken, _ = token.SignedString(JWTKEY())
-
-			} else {
-				return nil, errors.New(errorInputData)
+		if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
+			claims := EtherealClaims{
+				jwt.StandardClaims{
+					ExpiresAt: 1,
+					Issuer:    user.Email,
+				},
 			}
+			// TODO add choose crypt via configuration!
+			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-			return struct {
-				Token string `json:"token"`
-			}{generateToken}, nil
+			generateToken, _ = token.SignedString(JWTKEY())
+
+		} else {
+			return nil, errors.New(errorInputData)
+		}
+
+		return struct {
+			Token string `json:"token"`
+		}{generateToken}, nil
 	},
 }
 
@@ -80,7 +83,7 @@ var authMutation = graphql.NewObject(graphql.ObjectConfig{
 })
 
 // handler for get token if config in = "global" mode
-func RegisterHandlerAuthCreateToken()  {
+func RegisterHandlerAuthCreateToken() {
 	if ethereal.GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
 		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
 			var user ethereal.User
