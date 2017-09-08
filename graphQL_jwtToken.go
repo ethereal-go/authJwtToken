@@ -79,9 +79,10 @@ var authMutation = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
+// handler for get token if config in = "global" mode
 func RegisterHandlerAuthCreateToken()  {
-	if ethereal.GetCnf("AUTH.JWT_TOKEN").(string) == "globals" {
-		http.HandleFunc("auth0/login", func(w http.ResponseWriter, r *http.Request) {
+	if ethereal.GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
+		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
 			var user ethereal.User
 
 			login := r.FormValue("login")
