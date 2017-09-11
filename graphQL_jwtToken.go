@@ -3,7 +3,7 @@ package authJwtToken
 import (
 	"errors"
 	"github.com/ethereal-go/ethereal"
-	"github.com/agoalofalife/ethereal/utils"
+	"github.com/ethereal-go/ethereal/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 	"net/http"
