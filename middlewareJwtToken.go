@@ -3,6 +3,7 @@ package authJwtToken
 import (
 	"net/http"
 	"github.com/justinas/alice"
+	"github.com/ethereal-go/ethereal/root/app"
 	"github.com/ethereal-go/ethereal"
 	"encoding/json"
 )
@@ -16,7 +17,7 @@ type MiddlewareJWTToken struct {
 	included       bool // flag is enabled or disabled authJwtToken
 }
 
-func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *ethereal.Application) {
+func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *app.Application) {
 	confToken := ethereal.GetCnf("AUTH.JWT_TOKEN").(string)
 
 	if confToken == "local" {
