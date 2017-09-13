@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 	"github.com/ethereal-go/ethereal"
+	"github.com/ethereal-go/ethereal/root/config"
 )
 
 type EtherealClaims struct {
@@ -14,12 +15,12 @@ type EtherealClaims struct {
 
 // get key jwt
 func JWTKEY() []byte {
-	return []byte(ethereal.GetCnf("AUTH.JWT_KEY_HMAC").(string))
+	return []byte(config.GetCnf("AUTH.JWT_KEY_HMAC").(string))
 }
 
 // handler check error
 func handlerErrorToken(err error) (message error) {
-	var locale =  ethereal.GetCnf("L18N.LOCALE").(string)
+	var locale =  config.GetCnf("L18N.LOCALE").(string)
 
 	if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {

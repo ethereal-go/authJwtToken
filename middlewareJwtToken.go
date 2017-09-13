@@ -6,6 +6,7 @@ import (
 	"github.com/ethereal-go/ethereal/root/app"
 	"github.com/ethereal-go/ethereal"
 	"encoding/json"
+	"github.com/ethereal-go/ethereal/root/config"
 )
 
 type MiddlewareJWTToken struct {
@@ -18,7 +19,7 @@ type MiddlewareJWTToken struct {
 }
 
 func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *app.Application) {
-	confToken := ethereal.GetCnf("AUTH.JWT_TOKEN").(string)
+	confToken := config.GetCnf("AUTH.JWT_TOKEN").(string)
 
 	if confToken == "local" {
 		m.included = true

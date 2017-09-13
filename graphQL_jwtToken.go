@@ -7,6 +7,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 	"net/http"
+	"github.com/ethereal-go/ethereal/root/config"
+	"github.com/ethereal-go/base/root/database"
 )
 
 // set locale database
@@ -14,7 +16,7 @@ const (
 	errorInputData = "Login or Password not valid"
 )
 // get type locale from configuration..
-var locale = ethereal.GetCnf("L18N.LOCALE").(string)
+var locale = config.GetCnf("L18N.LOCALE").(string)
 
 var jwtType = graphql.NewObject(graphql.ObjectConfig{
 	Name:        "JWTToken",
@@ -42,7 +44,7 @@ var CreateJWTToken = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		var user ethereal.User
+		var user database.User
 		var generateToken string
 		login, _ := params.Args["login"].(string)
 		password, _ := params.Args["password"].(string)
@@ -84,9 +86,9 @@ var authMutation = graphql.NewObject(graphql.ObjectConfig{
 
 // handler for get token if config in = "global" mode
 func RegisterHandlerAuthCreateToken() {
-	if ethereal.GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
+	if config.GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
 		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
-			var user ethereal.User
+			var user database.User
 
 			login := r.FormValue("login")
 			password := r.FormValue("password")
