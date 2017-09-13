@@ -7,15 +7,17 @@
  
 import (
 	"github.com/ethereal-go/ethereal"
+	"github.com/ethereal-go/base"
 	"github.com/ethereal-go/authJwtToken"
 )
 
 func main() {
 
+	ethereal.Queries().Add("users", &base.UserField).Add("roles", &base.RoleField)
+	ethereal.Mutations().Add("createUsers", &base.CreateUser)
 	ethereal.ConstructorMiddleware().AddMiddleware(authJwtToken.GetMiddlewareJwtToken())
 	authJwtToken.RegisterHandlerAuthCreateToken()
-	ethereal.Mutations().Add("createToken", &authJwtToken.CreateJWTToken)
-	ethereal.I18nGraphQL().Merge(authJwtToken.GetLocale()).Fill()
+
 	ethereal.Start()
 }
 
