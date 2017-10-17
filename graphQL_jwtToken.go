@@ -2,19 +2,20 @@ package authJwtToken
 
 import (
 	"errors"
-	"github.com/ethereal-go/ethereal"
-	"github.com/ethereal-go/ethereal/utils"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/ethereal-go/base/root/database"
+	"github.com/ethereal-go/ethereal"
+	"github.com/ethereal-go/ethereal/root/config"
+	"github.com/ethereal-go/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"net/http"
-	"github.com/ethereal-go/ethereal/root/config"
-	"github.com/ethereal-go/base/root/database"
 )
 
 // set locale database
 const (
 	errorInputData = "Login or Password not valid"
 )
+
 // get type locale from configuration..
 var locale = config.GetCnf("L18N.LOCALE").(string)
 
@@ -95,7 +96,7 @@ func RegisterHandlerAuthCreateToken() {
 
 			ethereal.App.Db.Where("email = ?", login).First(&user)
 
-			if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
+			if user.ID != 0 && utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
 				claims := EtherealClaims{
 					jwt.StandardClaims{
 						ExpiresAt: 1,
@@ -107,6 +108,8 @@ func RegisterHandlerAuthCreateToken() {
 
 				generateToken, _ := token.SignedString(JWTKEY())
 				w.Write([]byte(generateToken))
+			} else {
+				w.Write([]byte("Not found user or password not true."))
 			}
 		})
 	}
