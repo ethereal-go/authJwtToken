@@ -1,0 +1,18 @@
+{
+  "en-US": {
+    "graphQL.JwtType.CreateJWTToken.Description": "Create new jwt-token",
+    "graphQL.JwtType.Token.Description":          "Auth JWT Token",
+    "graphQL.JwtType.Description" : "The type field holds the token and is designed for local authentication",
+    "jwtToken.ValidationErrorMalformed": "That's not even a token",
+    "jwtToken.ValidationErrorExpired": "Timing is everything",
+    "jwtToken.ErrorBase": "Couldn't handle this token "
+  },
+  "ru-RU": {
+    "graphQL.JwtType.CreateJWTToken.Description": "Создать новый jwt-token",
+    "graphQL.JwtType.Token.Description":          "Токен",
+    "graphQL.JwtType.Description" : "Тип хранит в себе поле токен и создан для локальной аутентификации",
+    "jwtToken.ValidationErrorMalformed": "Это не похоже на токен",
+    "jwtToken.ValidationErrorExpired": "Время истекло",
+    "jwtToken.ErrorBase": "Не удалось обрабоать этот токен "
+  }
+}
