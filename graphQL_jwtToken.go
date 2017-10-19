@@ -74,10 +74,6 @@ var CreateJWTToken = graphql.Field{
 	},
 }
 
-var AuthToken, _ = graphql.NewSchema(graphql.SchemaConfig{
-	Mutation: authMutation,
-})
-
 var authMutation = graphql.NewObject(graphql.ObjectConfig{
 	Name: "AuthMutation",
 	Fields: graphql.Fields{
