@@ -1,16 +1,16 @@
 package authJwtToken
 
 import (
-	"net/http"
-	"github.com/justinas/alice"
-	"github.com/ethereal-go/ethereal/root/app"
-	"github.com/ethereal-go/ethereal"
 	"encoding/json"
+	"github.com/ethereal-go/ethereal"
+	"github.com/ethereal-go/ethereal/root/app"
 	"github.com/ethereal-go/ethereal/root/config"
+	"github.com/justinas/alice"
+	"net/http"
 )
 
 type MiddlewareJWTToken struct {
-	jwt            EtherealClaims
+	EtherealClaims
 	StatusError    int
 	ResponseError  string
 	authenticated  bool
@@ -26,7 +26,7 @@ func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *app.App
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				m.responseWriter = w
-				if check, err := m.jwt.Verify(r); !check {
+				if check, err := m.Verify(r); !check {
 					m.ResponseError = handlerErrorToken(err).Error()
 				} else {
 					m.authenticated = true
@@ -39,7 +39,8 @@ func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *app.App
 		// check jwt token all queries..
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				if check, err := m.jwt.Verify(r); !check {
+
+				if check, err := m.Verify(r); !check {
 					json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
 					w.WriteHeader(m.StatusError)
 				}
